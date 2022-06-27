@@ -8,7 +8,7 @@ use(Web3ClientPlugin)
 const privateKey = secrets.seed
 const userAddress =  "0x2E0c3556c831f669cfb5CA86e01AcF3ACBaB207e";
 const rootToken = "0x8921b4b1f4797397701032e307293d2c41df3bc0";
-const amount = "10000000000000000000000";
+const amount = "100000000000000000000";
 
 
 const getPOSClient = (network = 'testnet', version = 'mumbai') => {
@@ -42,8 +42,13 @@ async function aprroval() {
 
     const txHash = await result.getTransactionHash();
     console.log("txHash", txHash);
+    try{
     const receipt = await result.getReceipt();
     console.log("receipt", receipt);
+    }catch(err){
+      console.log(err);
+    }
+   
     console.log("Approved!")
 }
 
