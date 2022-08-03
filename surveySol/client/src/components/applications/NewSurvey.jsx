@@ -13,8 +13,8 @@ import {
   Paper,
   useMediaQuery,
 } from "@material-ui/core";
-
-
+import { ethers } from "ethers";
+import Web3Modal from "web3modal";
 
 import FormField from "../FormField";
 import constants from "../../constants";
@@ -24,6 +24,9 @@ import { SnackbarContext } from "../../context/SnackbarContext";
 import { useAuthDispatch } from "../../context/AuthContext";
 import { REQUEST_AUTH } from "../../reducers/types";
 import { createSurvey } from "../../actions/apiActions"
+
+import PortalContract from '../../abis/portal.json'
+import SurveyContract from '../../abis/survey.json'
 const useStyles = makeStyles((theme) => ({
   root: {
     minHeight: "80vh",
@@ -77,12 +80,13 @@ const NewSurvey = () => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [formData, setFormData] = useState(null);
   const [survey, setsurvey] = useState({
-    userID: "pf2",
+    userID: "pf691",
     title: "",
     description: "",
     reward: "",
     occupation: "",
     gender: "",
+    tokenAddress: "",
     field: [{ question: 'what is your name', options: ["palak", "jayati"] }]
   });
 
@@ -92,6 +96,7 @@ const NewSurvey = () => {
     description: "",
     reward: "",
     occupation: "",
+    tokenAddress: "",
     gender: "",
   });
 
@@ -112,6 +117,7 @@ const NewSurvey = () => {
       description: "",
       reward: "",
       occupation: "",
+      tokenAddress: "",
       gender: "",
     });
 
@@ -119,31 +125,38 @@ const NewSurvey = () => {
     return formIsValid;
   };
 
-  const handleFormSubmit = (event) => {
+  const handleFormSubmit = async (event) => {
     dispatch({ type: REQUEST_AUTH });
     event.preventDefault();
     if (isFormValid()) {
 
-      createSurvey({ dispatch, body: survey }).then(
-        (res) => {
+      const res = await createSurvey({ dispatch, body: survey });
+      if (res.status === 201) {
+        setFormData({
+          survey,
+          hash: res.data.hash
+        });
+        console.log("done");
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+        const s = provider.getSigner();
+        const add = '0x404Ee28eF5fc24A10200A6596E72Fd680DE5B1A6';
+        const contract = new ethers.Contract(add, PortalContract.abi, s);
+        console.log(contract);
+        const t = await contract.createSurvey("0xcc42724c6683b7e57334c4e856f4c9965ed682bd", 12, ["male"])
+        console.log("Hello Palak")
+        console.log(t);
+        history.push(`/student/applications`);
+        setSeverity("success");
+        setMessage("Created survey");
 
-          if (res.status === 201) {
-            setFormData({
-              survey,
-              hash: res.data.hash
-            });
-            console.log("done");
-            history.push(`/student/applications`);
-            setSeverity("success");
-            setMessage("Created survey");
+      } else {
+        setSeverity("error");
+        setMessage(res.error);
+        setOpen(true);
+      }
 
-          } else {
-            setSeverity("error");
-            setMessage(res.error);
-            setOpen(true);
-          }
-        }
-      );
     }
   };
   return (
@@ -185,6 +198,13 @@ const NewSurvey = () => {
                   required={true}
                   onChange={handlesurvey}
                   error={errors.reward}
+                />
+                <FormField
+                  label="Token Address"
+                  name="tokenAddress"
+                  required={true}
+                  onChange={handlesurvey}
+                  error={errors.tokenAddress}
                 />
                 <Grid container spacing={1}>
                   <Grid item xs={12} md={6}>

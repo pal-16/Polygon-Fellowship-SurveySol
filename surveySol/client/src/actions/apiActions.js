@@ -1,7 +1,7 @@
 import axios from "axios";
 import { AUTH_SUCCESS, AUTH_ERROR } from "../reducers/types";
 
-const BASE_URL = process.env.REACT_APP_API_URL;
+const BASE_URL = "http://localhost:8000/api";
 
 export const getApplicationDetails = async ({ id, token }) => {
   try {

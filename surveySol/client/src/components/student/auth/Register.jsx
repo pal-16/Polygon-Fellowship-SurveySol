@@ -174,21 +174,26 @@ const Register = () => {
       if (res.status === 201) {
         setFormData({ student, hash: res.data.hash });
 
+        try {
+          console.log("Done")
+          const web3Modal = new Web3Modal();
+          const connection = await web3Modal.connect();
+          const provider = new ethers.providers.Web3Provider(connection);
+          const s = provider.getSigner();
+          const add = '0x404Ee28eF5fc24A10200A6596E72Fd680DE5B1A6';
+          const contract = new ethers.Contract(add, PortalContract.abi, s);
+          console.log(contract);
+          const t = await contract.addUser(["male", "female"], [true, false], "0x780aF34e5A55B592f0494cC574999D20D9632817")
+          //     history.push(`/${props.userType}/register`);
+          console.log("done");
+          history.push(`/student/applications`);
+          setSeverity("success");
+          setMessage("You have successfully registered.");
 
-        console.log("Done")
-        const web3Modal = new Web3Modal();
-        const connection = await web3Modal.connect();
-        const provider = new ethers.providers.Web3Provider(connection);
-        const s = provider.getSigner();
-        const add = '0x42Ab9DeB854F206e6943B7a6775A20e8bBFcC9B7';
-        const contract = new ethers.Contract(add, PortalContract.abi, s);
-        console.log(contract);
-        contract.addUser(['male', 'female', 'other'], ['true', 'false', 'false'], '0x780aF34e5A55B592f0494cC574999D20D9632817')
-        //     history.push(`/${props.userType}/register`);
-        console.log("done");
-        history.push(`/student/applications`);
-        setSeverity("success");
-        setMessage("You have successfully registered.");
+
+        } catch (e) {
+          console.log(e);
+        }
 
       } else {
         setSeverity("error");
