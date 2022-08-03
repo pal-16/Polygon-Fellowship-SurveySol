@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
+import PortalContract from '../../abis/portal.json'
+import SurveyContract from '../../abis/survey.json';
 import { ethers } from "ethers";
-
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Box,
@@ -11,7 +12,7 @@ import {
 import Spinner from "../../components/Spinner";
 import { useAuthState, useAuthDispatch } from "../../context/AuthContext";
 import { useHistory } from "react-router-dom";
-import { login } from "../../actions/apiActions";
+//import { checkLogin } from "../../actions/apiActions";
 import { SnackbarContext } from "../../context/SnackbarContext";
 import Web3Modal from "web3modal";
 
@@ -56,6 +57,14 @@ const Login = (props) => {
   const [signer, setSigner] = useState("");
 
   const handleGenerate = async (event) => {
+    const web3Modal = new Web3Modal()
+    const connection = await web3Modal.connect()
+    const provider = new ethers.providers.Web3Provider(connection);
+    const add = '0x42Ab9DeB854F206e6943B7a6775A20e8bBFcC9B7';
+    const s = provider.getSigner();
+    const contract = new ethers.Contract(add, PortalContract.abi, s);
+    console.log(contract);
+    const tx = await contract.id();
     history.push(`/${props.userType}/register`);
 
   };
@@ -75,18 +84,6 @@ const Login = (props) => {
       alignItems="center"
     >
       <Paper elevation={3} className={classes.paper}>
-        <button onClick={async (e) => {
-          e.preventDefault();
-          console.log("Done")
-          const web3Modal = new Web3Modal();
-          const connection = await web3Modal.connect();
-          const provider = new ethers.providers.Web3Provider(connection);
-          const s = provider.getSigner();
-          //const sign = s.signMessage("Welcome to SurveySol");
-          const add = await s.getAddress();
-          console.log(add)
-          setSigner(s);
-        }}>Connect</button>
 
         <form className={classes.form} noValidate>
 
@@ -100,10 +97,15 @@ const Login = (props) => {
                 const connection = await web3Modal.connect();
                 const provider = new ethers.providers.Web3Provider(connection);
                 const s = provider.getSigner();
+                const checkadd = await s.getAddress();
+                console.log(checkadd);
+                //    if (!checkLogin(checkadd)) {
                 const sign = await s.signMessage("Welcome to SurveySol");
-                console.log(sign)
+                //  }
+
                 setSigner(s);
-                history.push(`/${props.userType}/register`);
+
+                history.push(`/student/register`);
               }}
               size="large"
               color="primary"

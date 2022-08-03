@@ -9,13 +9,16 @@ import ApplicationDetail from "../applications/ApplicationDetail";
 import StudentActions from "../applications/StudentActions";
 import NewSurvey from "../applications/NewSurvey";
 import DashboardLayout from "../../components/DashboardLayout/index";
+//import Userform from "../../components/applications/QuestionForm";
+import Dashboard from "../../components/form/Dashboard";
 const Student = () => {
   return (
     <Switch>
       <Route path="/student/login">
         <Login userType="student" name="Student" />
       </Route>
-      <Route path="/student/register" component={Register} />
+      <Route path="/student/register" component={Register} />'
+      <Route path="/student/form" component={Dashboard} />'
       {/* <ProtectedRoute
         exact
         path="/student"

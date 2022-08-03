@@ -12,19 +12,7 @@ const StudentActions = (props) => {
 
   const handleDelete = () => {
     props.setLoading(true);
-    deleteApplication({ id: props.id, token }).then((res) => {
-      if (res.error) {
-        setSeverity("error");
-        setMessage(res.error);
-        setOpen(true);
-      } else {
-        setSeverity("success");
-        setMessage("Application submitted successfully");
-        setOpen(true);
-        history.push("/student/applications");
-      }
-      props.setLoading(false);
-    });
+
   };
   return (
     <Box display="flex" justifyContent={props.position}>

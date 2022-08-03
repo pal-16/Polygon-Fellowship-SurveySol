@@ -1,4 +1,9 @@
 import React, { Suspense, lazy } from "react";
+import PortalContract from './abis/portal.json';
+import SurveyContract from './abis/survey.json';
+import Web3Modal from "web3modal";
+import { ethers } from "ethers";
+
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { Box, Container } from "@material-ui/core";
 import Header from "./components/layout/Header";
@@ -7,37 +12,32 @@ import Spinner from "./components/Spinner";
 import { AuthProvider } from "./context/AuthContext";
 import { SnackbarProvider } from "./context/SnackbarContext";
 import SnackBar from "./components/SnackBar";
-// Common Pages
 const LazyLanding = lazy(() => import("./components/common/Landing"));
 const LazyPageNotFound = lazy(() => import("./components/common/PageNotFound"));
-
-// Student components
 const LazyStudent = lazy(() => import("./components/student/Student"));
 
-componentDidMount = async () => {
-  try {
-    const web3Modal = new Web3Modal()
-    const connection = await web3Modal.connect()
-    const provider = new ethers.providers.Web3Provider(connection);
-    const add = '0x42Ab9DeB854F206e6943B7a6775A20e8bBFcC9B7';
-    const s = provider.getSigner();              
-    const contract = new ethers.Contract(add, portal.abi, s);
-    console.log(contract);
-    const tx = await contract.id();
 
-    // Set web3, accounts, and contract to the state, and then proceed with an
-    // example of interacting with the contract's methods.
-    
-  } catch (error) {
-    // Catch any errors for any of the above operations.
-    alert(
-      `Failed to load web3, accounts, or contract. Check console for details.`,
-    );
-    console.error(error);
-  }
-};
 
 const App = () => {
+
+  const componentDidMount = async () => {
+    try {
+      const web3Modal = new Web3Modal()
+      const connection = await web3Modal.connect()
+      const provider = new ethers.providers.Web3Provider(connection);
+      const add = '0x42Ab9DeB854F206e6943B7a6775A20e8bBFcC9B7';
+      const s = provider.getSigner();
+      const contract = new ethers.Contract(add, PortalContract.abi, s);
+      console.log(contract);
+      const tx = await contract.id();
+    } catch (error) {
+      alert(
+        `Failed to load web3, accounts, or contract. Check console for details.`,
+      );
+      console.error(error);
+    }
+  };
+
   return (
     <BrowserRouter>
       <SnackbarProvider>

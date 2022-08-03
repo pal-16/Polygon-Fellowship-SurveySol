@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-
+import Web3Modal from "web3modal";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import {
@@ -25,7 +25,15 @@ import { useAuthDispatch } from "../../../context/AuthContext";
 import FormField from "../../../components/FormField";
 import constants from "../../../constants";
 import { REQUEST_AUTH } from "../../../reducers/types";
+
+import { ethers } from "ethers";
+
+
+
+import PortalContract from '../../../abis/portal.json'
+import SurveyContract from '../../../abis/survey.json'
 import { register } from "../../../actions/apiActions"
+
 const useStyles = makeStyles((theme) => ({
   root: {
     minHeight: "80vh",
@@ -154,7 +162,7 @@ const Register = () => {
     return formIsValid;
   };
 
-  const handleFormSubmit = (event) => {
+  const handleFormSubmit = async (event) => {
     dispatch({ type: REQUEST_AUTH });
     event.preventDefault();
     if (isFormValid()) {
@@ -162,26 +170,32 @@ const Register = () => {
       console.log("===========================Palak")
       console.log(student);
 
-      register({ dispatch, body: student }).then(
-        (res) => {
+      const res = await register({ dispatch, body: student })
+      if (res.status === 201) {
+        setFormData({ student, hash: res.data.hash });
 
-          if (res.status === 201) {
-            setFormData({
-              student,
-              hash: res.data.hash
-            });
-            console.log("done");
-            history.push(`/student/applications`);
-            setSeverity("success");
-            setMessage("You have successfully registered.");
 
-          } else {
-            setSeverity("error");
-            setMessage(res.error);
-            setOpen(true);
-          }
-        }
-      );
+        console.log("Done")
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+        const s = provider.getSigner();
+        const add = '0x42Ab9DeB854F206e6943B7a6775A20e8bBFcC9B7';
+        const contract = new ethers.Contract(add, PortalContract.abi, s);
+        console.log(contract);
+        contract.addUser(['male', 'female', 'other'], ['true', 'false', 'false'], '0x780aF34e5A55B592f0494cC574999D20D9632817')
+        //     history.push(`/${props.userType}/register`);
+        console.log("done");
+        history.push(`/student/applications`);
+        setSeverity("success");
+        setMessage("You have successfully registered.");
+
+      } else {
+        setSeverity("error");
+        setMessage(res.error);
+        setOpen(true);
+      }
+
     }
   };
   return (

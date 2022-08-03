@@ -41,6 +41,27 @@ export const getSurveys = async ({ id, token, userType }) => {
   }
 };
 
+// export const checkLogin = async ({ dispatch,id }) => {
+//   try {
+//     const res = await axios.post(BASE_URL + `/checklogin`, {
+//       id
+//     });
+//     dispatch({
+//       type: AUTH_SUCCESS,
+//      //payload: { ...res.data, rememberme, userType }
+//     });
+//     return {
+//       data: res.data,
+//       status: res.status
+//     };
+//   } catch (err) {
+//     dispatch({ type: AUTH_ERROR });
+//     return {
+//       error: err.response.data.error,
+//       status: err.response.status
+//     };
+//   }
+// };
 
 
 export const login = async ({ dispatch, pubkey, rememberme, userType }) => {
@@ -91,7 +112,7 @@ export const register = async ({ dispatch, body}) => {
   try {
     console.log("Palak")
     console.log(body);
-    const res = await axios.post(BASE_URL + `/user/register`, {
+    const res = await axios.post(`http://localhost:8000/api/user/register`, {
       ...body
     });
     dispatch({
