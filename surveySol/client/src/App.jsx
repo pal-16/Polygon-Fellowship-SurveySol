@@ -16,7 +16,28 @@ const LazyLanding = lazy(() => import("./components/common/Landing"));
 const LazyPageNotFound = lazy(() => import("./components/common/PageNotFound"));
 const LazyStudent = lazy(() => import("./components/student/Student"));
 
+componentDidMount = async () => {
+  try {
+    const web3Modal = new Web3Modal()
+    const connection = await web3Modal.connect()
+    const provider = new ethers.providers.Web3Provider(connection);
+    const add = '0x42Ab9DeB854F206e6943B7a6775A20e8bBFcC9B7';
+    const s = provider.getSigner();              
+    const contract = new ethers.Contract(add, portal.abi, s);
+    console.log(contract);
+    const tx = await contract.id();
 
+    // Set web3, accounts, and contract to the state, and then proceed with an
+    // example of interacting with the contract's methods.
+    
+  } catch (error) {
+    // Catch any errors for any of the above operations.
+    alert(
+      `Failed to load web3, accounts, or contract. Check console for details.`,
+    );
+    console.error(error);
+  }
+};
 
 const App = () => {
 
