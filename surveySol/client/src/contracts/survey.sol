@@ -13,6 +13,7 @@ contract survey {
     string [] public userCriteria;
     string [] public surveyResponses;
     bool public surveyStatus;
+    address payable [] participants;
     portal parentContract;
     
 
@@ -36,6 +37,7 @@ contract survey {
 
     modifier onlyAdmin {
         require(msg.sender == admin);
+        _;
     }
 
     function setRewardAmount(uint256 _rewardAmount) public onlyCreator {
@@ -120,6 +122,7 @@ contract survey {
     function disburseReward(address payable user) public onlyAdmin {
         require(surveyStatus == true);
         surveyToken.transfer(user, rewardAmount);
+        participants.push(user);
         uint b = surveyTokenBalance();
         emit participantPaid(user, rewardAmount);
         if (b<rewardAmount) {
