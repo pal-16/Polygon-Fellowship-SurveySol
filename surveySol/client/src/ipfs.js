@@ -1,19 +1,14 @@
-const responseSheet = {};
+import { create as IPFSHTTPClient } from "ipfs-http-client";
+const client = IPFSHTTPClient("https://ipfs.infura.io:5001/api/v0");
 
-import { create, IPFSHTTPClient } from "ipfs-http-client";
-let ipfs: IPFSHTTPClient | undefined;
+const upload = (response) => {
   try {
-    ipfs = create({
-      url: "https://ipfs.infura.io:5001/api/v0",
-
-    });
+    let buffer = Buffer.from(JSON.stringify(response));
+    const added = await client.add(buffer);
+    const url = `https://ipfs.infura.io/ipfs/${added.path}`;
+    setFileUrl(url);
+    console.log(url);
   } catch (error) {
     console.error("IPFS error ", error);
-    ipfs = undefined;
   }
-
-const uploadFile => (responseSheet) => {
-  let buffer = Buffer.from(JSON.stringify(this.responseSheet));
-  const added = await (ipfs as IPFSHTTPClient).add(buffer);
-}
-
+};

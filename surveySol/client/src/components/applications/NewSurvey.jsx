@@ -11,7 +11,7 @@ import {
   FormHelperText,
   Button,
   Paper,
-  useMediaQuery,
+  useMediaQuery
 } from "@material-ui/core";
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
@@ -23,10 +23,10 @@ import { Link, useHistory } from "react-router-dom";
 import { SnackbarContext } from "../../context/SnackbarContext";
 import { useAuthDispatch } from "../../context/AuthContext";
 import { REQUEST_AUTH } from "../../reducers/types";
-import { createSurvey } from "../../actions/apiActions"
+import { createSurvey } from "../../actions/apiActions";
 
-import PortalContract from '../../abis/portal.json'
-import SurveyContract from '../../abis/survey.json'
+import PortalContract from "../../abis/portal.json";
+import SurveyContract from "../../abis/survey.json";
 const useStyles = makeStyles((theme) => ({
   root: {
     minHeight: "80vh",
@@ -63,8 +63,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-
-
 const NewSurvey = () => {
   const classes = useStyles();
   const dispatch = useAuthDispatch();
@@ -74,20 +72,18 @@ const NewSurvey = () => {
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     setLoading(true);
-
-
   }, []);
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [formData, setFormData] = useState(null);
   const [survey, setsurvey] = useState({
-    userID: "pf693",
+    userID: "pf21139229293",
     title: "",
     description: "",
     reward: "",
     occupation: "",
     gender: "",
     tokenAddress: "",
-    field: [{ question: 'what is your name', options: ["palak", "jayati"] }]
+    field: [{ question: "what is your name", options: ["palak", "jayati"] }]
   });
 
   const [errors, updateErrors] = useState({
@@ -97,9 +93,8 @@ const NewSurvey = () => {
     reward: "",
     occupation: "",
     tokenAddress: "",
-    gender: "",
+    gender: ""
   });
-
 
   const [isRegistered, setIsRegistered] = useState(true);
   const handlesurvey = (e) => {
@@ -118,9 +113,8 @@ const NewSurvey = () => {
       reward: "",
       occupation: "",
       tokenAddress: "",
-      gender: "",
+      gender: ""
     });
-
 
     return formIsValid;
   };
@@ -129,7 +123,6 @@ const NewSurvey = () => {
     dispatch({ type: REQUEST_AUTH });
     event.preventDefault();
     if (isFormValid()) {
-
       const res = await createSurvey({ dispatch, body: survey });
       if (res.status === 201) {
         setFormData({
@@ -141,27 +134,30 @@ const NewSurvey = () => {
         const connection = await web3Modal.connect();
         const provider = new ethers.providers.Web3Provider(connection);
         const s = provider.getSigner();
-        const add = '0x404Ee28eF5fc24A10200A6596E72Fd680DE5B1A6';
+        const add = "0x475C5c294Cfe228FADFC1e1FD80c12fB98818CE6";
         const contract = new ethers.Contract(add, PortalContract.abi, s);
         console.log(contract);
-        const t = await contract.createSurvey("0xcc42724c6683b7e57334c4e856f4c9965ed682bd", 12, ["male"], { value: 20 })
-        console.log("Hello Palak")
+        // const t = await contract.portalFees();
+        const t = await contract.createSurvey(
+          "0xcc42724c6683b7e57334c4e856f4c9965ed682bd",
+          12,
+          ["male"],
+          { value: 10 }
+        );
+        console.log("Hello Palak");
         console.log(t);
         history.push(`/student/applications`);
         setSeverity("success");
         setMessage("Created survey");
-
       } else {
         setSeverity("error");
         setMessage(res.error);
         setOpen(true);
       }
-
     }
   };
   return (
     <>
-
       <React.Fragment>
         <Box
           className={classes.root}
@@ -177,7 +173,6 @@ const NewSurvey = () => {
 
             <form className={classes.form} noValidate>
               <div className={classes.formInner}>
-
                 <FormField
                   label="Title"
                   name="title"
@@ -239,9 +234,7 @@ const NewSurvey = () => {
                       className={classes.formControl}
                       error={errors.gender.length !== 0}
                     >
-                      <InputLabel id="gender-label">
-                        Gender
-                      </InputLabel>
+                      <InputLabel id="gender-label">Gender</InputLabel>
                       <Select
                         labelId="gender-label"
                         id="gender"
@@ -273,7 +266,6 @@ const NewSurvey = () => {
                 </Button>
               </div>
             </form>
-
           </Paper>
         </Box>
       </React.Fragment>
@@ -282,4 +274,3 @@ const NewSurvey = () => {
 };
 
 export default NewSurvey;
-
