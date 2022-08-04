@@ -80,7 +80,7 @@ const NewSurvey = () => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [formData, setFormData] = useState(null);
   const [survey, setsurvey] = useState({
-    userID: "pf691",
+    userID: "pf693",
     title: "",
     description: "",
     reward: "",
@@ -144,7 +144,7 @@ const NewSurvey = () => {
         const add = '0x404Ee28eF5fc24A10200A6596E72Fd680DE5B1A6';
         const contract = new ethers.Contract(add, PortalContract.abi, s);
         console.log(contract);
-        const t = await contract.createSurvey("0xcc42724c6683b7e57334c4e856f4c9965ed682bd", 12, ["male"])
+        const t = await contract.createSurvey("0xcc42724c6683b7e57334c4e856f4c9965ed682bd", 12, ["male"], { value: 20 })
         console.log("Hello Palak")
         console.log(t);
         history.push(`/student/applications`);

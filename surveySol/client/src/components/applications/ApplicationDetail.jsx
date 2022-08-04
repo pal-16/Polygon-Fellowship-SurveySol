@@ -14,6 +14,7 @@ import { useAuthState } from "../../context/AuthContext";
 import Spinner from "../Spinner";
 import ApplicationItem from "./ApplicationItem";
 import StatusChip from "./StatusChip";
+import FormikContainer from "./detail/FormikContainer";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,18 +60,11 @@ const ApplicationDetail = (props) => {
   const { token } = useAuthState();
   const Actions = props.actions;
 
-  const [applicationData, setApplicationData] = useState({
+  const [surveyData, setSurveyData] = useState({
     _id: "",
     studentID: "",
     facultyID: "",
     title: "",
-    description: "",
-    organisedBy: "",
-    startDate: "",
-    endDate: "",
-    doi: "",
-    reward: 0,
-    status: "",
     domainAchievement: "",
     links: [],
     files: []
@@ -78,152 +72,81 @@ const ApplicationDetail = (props) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
-    getApplicationDetails({ id, token }).then((res) => {
-      if (res.error) {
-        setLoading(false);
-      } else {
-        setApplicationData(res.data);
-        setLoading(false);
-      }
-    });
+    //setLoading(true);
+    // getSurveyDetails({ id, token }).then((res) => {
+    //   if (res.error) {
+    //     setLoading(false);
+    //   } else {
+    //     setSurveyData(res.data);
+    //     setLoading(false);
+    //   }
+    // });
   }, [history, id, token]);
 
   return loading ? (
     <Spinner />
   ) : (
-    <Box
-      className={classes.root}
-      display="flex"
-      flexDirection="column"
-      justifyContent="start"
-      alignItems="center"
-    >
-      <Paper elevation={isSmallScreen ? 0 : 3} className={classes.paper}>
-        <Typography variant="h6">
-          {"Application Details".toLocaleUpperCase()}
-        </Typography>
-        <Grid
-          container
-          spacing={isSmallScreen ? 0 : 3}
-          className={classes.grid}
-        >
-          <Grid
-            item
-            xs={12}
-            md={6}
-            className={!isSmallScreen ? classes.separator : ""}
-            style={{ paddingRight: "30px" }}
-          >
-            <ApplicationItem
-              label="Application ID"
-              value={applicationData._id}
-            />
+    <FormikContainer />
+    // <Box
+    //   className={classes.root}
+    //   display="flex"
+    //   flexDirection="column"
+    //   justifyContent="start"
+    //   alignItems="center"
+    // >
+    //   <Paper elevation={isSmallScreen ? 0 : 3} className={classes.paper}>
+    //     <Typography variant="h6">
+    //       {"Survey".toLocaleUpperCase()}
+    //     </Typography>
 
-            <ApplicationItem
-              label="Student Name"
-              value={applicationData.studentID.name}
-            />
+    //     <Grid
+    //       item
+    //       xs={12}
+    //       md={6}
+    //       className={!isSmallScreen ? classes.separator : ""}
+    //       style={{ paddingRight: "30px" }}
+    //     >
+    //       <ApplicationItem
+    //         label="Title of Survey"
+    //         value={surveyData._id}
+    //       />
 
-            <ApplicationItem
-              label="Faculty Name"
-              value={applicationData.facultyID.name}
-            />
+    //       <Grid item xs={12} md={6} style={{ paddingRight: "30px" }}>
+    //         <Box className={classes.item}>
+    //           <Typography variant="h6">{surveyData.title}</Typography>
+    //           <Divider variant="fullWidth" className={classes.divider} />
+    //           <Typography variant="body1">
+    //             {surveyData.description.length > 0
+    //               ? surveyData.description
+    //               : "No description provided"}
+    //           </Typography>
+    //         </Box>
 
-            <ApplicationItem
-              label="Domain of Achievement"
-              value={applicationData.domainAchievement}
-            />
-            <Box className={classes.item}>
-              <Typography variant="body1" className={classes.label}>
-                Status
-              </Typography>
-              <Divider variant="fullWidth" className={classes.divider} />
-              <StatusChip status={applicationData.status} />
-            </Box>
-            <ApplicationItem
-              label="Rewards Received"
-              value={`${applicationData.reward} VJ Coins`}
-            />
-            {applicationData.domainAchievement === "Research Paper" ? (
-              <>
-                <ApplicationItem
-                  label="Published By"
-                  value={applicationData.organisedBy}
-                />
-                <ApplicationItem
-                  label="Published On"
-                  value={applicationData.startDate.split("T")[0]}
-                />
-                <ApplicationItem
-                  label="Publication DOI"
-                  value={applicationData.doi}
-                />
-              </>
-            ) : (
-              <>
-                <ApplicationItem
-                  label="Organised By"
-                  value={applicationData.organisedBy}
-                />
-                <ApplicationItem
-                  label="Start Date"
-                  value={applicationData.startDate.split("T")[0]}
-                />
-                <ApplicationItem
-                  label="End Date"
-                  value={applicationData.endDate.split("T")[0]}
-                />
-              </>
-            )}
-          </Grid>
-          <Grid item xs={12} md={6} style={{ paddingRight: "30px" }}>
-            <Box className={classes.item}>
-              <Typography variant="h6">{applicationData.title}</Typography>
-              <Divider variant="fullWidth" className={classes.divider} />
-              <Typography variant="body1">
-                {applicationData.description.length > 0
-                  ? applicationData.description
-                  : "No description provided"}
-              </Typography>
-            </Box>
-
-            <Box style={{ marginBottom: "30px" }}>
-              <ApplicationItem label="Files" value="" />
-              {applicationData.files.map((file, index) => (
-                <li key={index}>
-                  <a href={file} target="_blank" rel="noopener noreferrer">
-                    Click to view the certificate
-                  </a>
-                </li>
-              ))}
-            </Box>
-
-            <Box style={{ marginBottom: "30px" }}>
-              <ApplicationItem label="Links" value="" />
-              {applicationData.links.map((link, index) => (
-                <a
-                  href={link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  key={index}
-                >
-                  {link}
-                </a>
-              ))}
-            </Box>
-            {applicationData.status === "Pending" && (
-              <Actions
-                position={isSmallScreen ? "center" : "start"}
-                applicationData={applicationData}
-                setLoading={setLoading}
-                id={applicationData._id}
-              />
-            )}
-          </Grid>
-        </Grid>
-      </Paper>
-    </Box>
+    //         <Box style={{ marginBottom: "30px" }}>
+    //           <ApplicationItem label="Links" value="" />
+    //           {surveyData.links.map((link, index) => (
+    //             <a
+    //               href={link}
+    //               target="_blank"
+    //               rel="noopener noreferrer"
+    //               key={index}
+    //             >
+    //               {link}
+    //             </a>
+    //           ))}
+    //         </Box>
+    //         {surveyData.status === "Pending" && (
+    //           <Actions
+    //             position={isSmallScreen ? "center" : "start"}
+    //             surveyData={surveyData}
+    //             setLoading={setLoading}
+    //             id={surveyData._id}
+    //           />
+    //         )}
+    //       </Grid>
+    //     </Grid>
+    //   </Paper>
+    // </Box>
   );
 };
 

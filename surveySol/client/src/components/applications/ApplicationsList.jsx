@@ -187,7 +187,7 @@ const ApplicationsList = () => {
               <TableRow key={application._id}>
                 <TableCell style={{ fontSize: "1.1rem", textAlign: "center" }}>
                   <Link
-                    to={`/${userType}/applications/${application._id}`}
+                    to={`/student/applications/${application._id}`}
                     className={classes.titleLink}
                   >
                     {application.title}
