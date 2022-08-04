@@ -43,12 +43,11 @@ const DashboardLayout = () => {
 
   useEffect(() => {
     setLoading(true);
-   
-      getUser({ id: userID, token, userType }).then((fetchedStudents) => {
-        setDetails(fetchedStudents.data);
-        setLoading(false);
-      });
- 
+
+    getUser({ id: userID, token, userType }).then((fetchedStudents) => {
+      setDetails(fetchedStudents.data);
+      setLoading(false);
+    });
   }, [token, userID, userType]);
 
   return loading ? (

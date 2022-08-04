@@ -1,8 +1,9 @@
 const constants = {
-  FACULTY_EMAILS:["director@vjti.ac.in",
-   "faculty@ce.vjti.ac.in",
-   "pamantry_b18@ce.vjti.ac.in",
-   "msdesai_b18@ce.vjti.ac.in"
+  FACULTY_EMAILS: [
+    "director@vjti.ac.in",
+    "faculty@ce.vjti.ac.in",
+    "pamantry_b18@ce.vjti.ac.in",
+    "msdesai_b18@ce.vjti.ac.in"
   ],
   BTECH: [
     "BTech Computer Engineering",
@@ -14,10 +15,7 @@ const constants = {
     "BTech Textile Technology",
     "BTech Production Engineering"
   ],
-  GENDER: [
-    "Male",
-    "Female"
-  ],
+  GENDER: ["Male", "Female"],
 
   MTECH: [
     "MTech Computer Engineering",
@@ -50,7 +48,12 @@ const constants = {
     "Diploma in Chemical Engineering"
   ],
 
-  OCCUPATION: ["Web3 Developer", "DevRel", "Frontend Developer", "Backend Developer"],
+  OCCUPATION: [
+    "Web3 Developer",
+    "DevRel",
+    "Frontend Developer",
+    "Backend Developer"
+  ],
   DOMAINS: ["Hackathon", "Competition", "Research Paper", "Other"],
   DEPARTMENTS: [
     "Civil & Environmental Engineering",

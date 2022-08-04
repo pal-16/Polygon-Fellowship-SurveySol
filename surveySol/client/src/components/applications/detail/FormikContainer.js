@@ -2,7 +2,7 @@ import React from "react";
 import { Formik, Form } from "formik";
 import CheckboxGroup from "./CheckboxGroup";
 //import React, { useEffect, useState, useContext } from "react";
-import { create as IPFSHTTPClient } from "ipfs-http-client";
+import { create } from "ipfs-http-client";
 
 function FormikControl(props) {
   const { control, ...rest } = props;
@@ -26,7 +26,7 @@ function FormikContainer() {
     birthDate: null
   };
 
-  const client = IPFSHTTPClient("https://ipfs.infura.io:5001/api/v0");
+  const client = create({ url: "https://ipfs.infura.io:5001/api/v0" });
 
   const uploadResponse = async (response) => {
     try {

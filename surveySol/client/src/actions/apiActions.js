@@ -63,7 +63,6 @@ export const getSurveys = async ({ id, token, userType }) => {
 //   }
 // };
 
-
 export const login = async ({ dispatch, pubkey, rememberme, userType }) => {
   try {
     const res = await axios.post(BASE_URL + `/${userType}/login`, {
@@ -106,18 +105,16 @@ export const createSurvey = async ({ token, body }) => {
   }
 };
 
-
-
-export const register = async ({ dispatch, body}) => {
+export const register = async ({ dispatch, body }) => {
   try {
-    console.log("Palak")
+    console.log("Palak");
     console.log(body);
     const res = await axios.post(`http://localhost:8000/api/user/register`, {
       ...body
     });
     dispatch({
       type: AUTH_SUCCESS,
-      payload: { ...res.data, rememberme: true,  userType:"student" }
+      payload: { ...res.data, rememberme: true, userType: "student" }
     });
     return {
       data: res.data,
@@ -139,7 +136,7 @@ export const getUser = async ({ id, token, userType }) => {
         Authorization: `Bearer ${token}`
       }
     });
-    
+
     return {
       data: res.data,
       status: res.status

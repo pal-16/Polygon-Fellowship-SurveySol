@@ -1,94 +1,76 @@
-import React from 'react';
+import React from "react";
 //import formService from '../../services/formService';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from "@material-ui/core/styles";
 
-import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import OneForm from './OneForm';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from "@material-ui/core/Grid";
+import Container from "@material-ui/core/Container";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import OneForm from "./OneForm";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
-
-
-const useStyles = makeStyles((theme)=>
-    ({
-        root: {
-          maxWidth: 345,
-        },
-        media: {
-          height: 140,
-        },
-        cardGrid: {
-            paddingTop: theme.spacing(8),
-            paddingBottom: theme.spacing(8),
-          },
-      })
-);
-
+const useStyles = makeStyles((theme) => ({
+  root: {
+    maxWidth: 345
+  },
+  media: {
+    height: 140
+  },
+  cardGrid: {
+    paddingTop: theme.spacing(8),
+    paddingBottom: theme.spacing(8)
+  }
+}));
 
 function Forms(props) {
-    const classes = useStyles();
+  const classes = useStyles();
 
-    const [user, setUser] = React.useState({})
-    const [forms, setForms] = React.useState([])
-    const [loadingForms, setLoadingForms] = React.useState(false);
+  const [user, setUser] = React.useState({});
+  const [forms, setForms] = React.useState([]);
+  const [loadingForms, setLoadingForms] = React.useState(false);
 
-    React.useEffect(()=>{
-       
-    }, [])
-    
-    React.useEffect(()=>{
+  React.useEffect(() => {}, []);
 
-        if(props.userId === undefined){
-            //console.log("this shit is undefined");
-        } else{
-           // console.log(props.userId);
-            // formService.getForms(props.userId)
-            // .then((forms2) => { 
-            //    // console.log(forms2);
+  React.useEffect(() => {
+    if (props.userId === undefined) {
+      //console.log("this shit is undefined");
+    } else {
+      // console.log(props.userId);
+      // formService.getForms(props.userId)
+      // .then((forms2) => {
+      //    // console.log(forms2);
+      //     setForms(forms2);
+      //     setLoadingForms(false);
+      //     },
+      //     error => {
+      //     const resMessage =
+      //         (error.response &&
+      //         error.response.data &&
+      //         error.response.data.message) ||
+      //         error.message ||
+      //         error.toString();
+      //         console.log(resMessage);
+      //     }
+      // );
+    }
+  }, [props.userId]);
 
-            //     setForms(forms2);
-            //     setLoadingForms(false);
-            //     },
+  return (
+    <div>
+      <div>
+        <CssBaseline />
 
-            //     error => {
-            //     const resMessage =
-            //         (error.response &&
-            //         error.response.data &&
-            //         error.response.data.message) ||
-            //         error.message ||
-            //         error.toString();
-            //         console.log(resMessage);
-            //     }
-            // );
-            
-        }
-        
-        
-    }, [props.userId])
-
-    return (
-        <div>
-            <div>
-            <CssBaseline />
-        
-            <Container className={classes.cardGrid} maxWidth="lg">
-              <Grid container spacing={6}>
-              {forms.map((form, i)=>(
-                  <OneForm formData={form} key={i}  />
-              ))}
-
-              </Grid>
-            </Container>
-                
-            
-            </div>
-            <div>
-            
-            </div>
-        </div>
-    );
+        <Container className={classes.cardGrid} maxWidth="lg">
+          <Grid container spacing={6}>
+            {forms.map((form, i) => (
+              <OneForm formData={form} key={i} />
+            ))}
+          </Grid>
+        </Container>
+      </div>
+      <div></div>
+    </div>
+  );
 }
 
 export default Forms;
