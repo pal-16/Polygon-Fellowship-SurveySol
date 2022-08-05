@@ -3,6 +3,11 @@ import { Formik, Form } from "formik";
 import CheckboxGroup from "./CheckboxGroup";
 //import React, { useEffect, useState, useContext } from "react";
 import { create } from "ipfs-http-client";
+import { ethers } from "ethers";
+// import PortalContract from "../../abis/portal.json";
+import SurveyContract from "../../../abis/survey.json";
+// import { adminSigner } from "../../../../config.js";
+import config from "../../../config";
 
 function FormikControl(props) {
   const { control, ...rest } = props;
@@ -39,10 +44,30 @@ function FormikContainer() {
       console.error("IPFS error ", error);
     }
   };
-  const onSubmit = (values) => {
-    console.log("Form data", values);
-    console.log("Saved data", JSON.parse(JSON.stringify(values)));
-    uploadResponse(values);
+
+  const onSubmit = async (values) => {
+    try {
+      console.log("Form data", values);
+      console.log("Saved data", JSON.parse(JSON.stringify(values)));
+      const admin = await config();
+      const useraddress = "0x5070c3CC7D9605422B1daa37216FCBa9fE527fF2";
+      let adminSurveyContract = new ethers.Contract(
+        "0x55c21Caa0f77f39C1Efe9e396a7cA18A0CD1bCF3",
+        SurveyContract.abi,
+        admin
+      );
+      // console.log("jojo");
+      // console.log(adminSurveyContract);
+      await contract.verifyParticipant(useraddress);
+      await uploadResponse(values);
+      let f = await adminSurveyContract.storeResponse(cid);
+      // console.log(admin);
+      // const k = await adminSurveyContract.surveyResponses(1);
+
+      await adminSurveyContract.disburseReward(useraddress);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
