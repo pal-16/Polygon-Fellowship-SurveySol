@@ -3,23 +3,25 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "./portal.sol";
 
 contract survey {
     address payable owner;
     address payable admin;
     IERC20 public surveyToken;
+    IERC721 public nftToken;
     uint256 public rewardAmount;
     string [] public userCriteria;
     string [] public surveyResponses;
     bool public surveyStatus;
     address payable [] participants;
     portal parentContract;
+    bool nftGating;
+    uint256 nftAmount;
     
-
-
     constructor(address _surveyToken, uint256 _rewardAmount, string [] memory _userCriteria, address payable parentAddress,
-     address payable _owner, address payable _admin) payable {
+     address payable _owner, address payable _admin, bool _nftGating, address nft, uint256 _nftAmount) payable {
         owner = _owner;
         admin = _admin;
         surveyToken = IERC20(_surveyToken);
@@ -27,7 +29,11 @@ contract survey {
         userCriteria = _userCriteria;
         surveyStatus = true;
         portal parentContract = portal(parentAddress);
-        
+        nftGating = _nftGating;
+        if (_nftGating) {
+            nftToken = IERC721(nft);
+            nftAmount = _nftAmount;
+        }
     }
 
     modifier onlyCreator {
@@ -37,6 +43,16 @@ contract survey {
 
     modifier onlyAdmin {
         require(msg.sender == admin);
+        _;
+    }
+
+    modifier isOpen {
+        require(surveyStatus == true);
+        _; 
+    }
+
+    modifier hasFunds {
+        require(surveyTokenBalance() >= rewardAmount);
         _;
     }
 
@@ -95,7 +111,20 @@ contract survey {
         emit statusUpdated(surveyStatus);
     }
 
+    function setNftGating(bool _nftGating, address _nftToken, uint256 amount) public onlyCreator {
+        nftGating = _nftGating;
+        if (nftGating) {
+            nftToken = IERC721(_nftToken);
+            nftAmount = amount;
+        }
+    }
+
+
     function verifyParticipant(address user) public returns (bool) {
+        if (nftGating && nftToken.balanceOf(user)<nftAmount) {
+            emit userRejected();
+            return false;
+        } 
         for (uint i = 0; i < userCriteria.length; i++) {
             uint p = parentContract.tags(userCriteria[0],user);
             if (p == 0) {
@@ -107,10 +136,8 @@ contract survey {
         return true;        
     }
 
-    function fillSurvey() public {
-        require(surveyStatus == true);
+    function fillSurvey() public isOpen hasFunds {
         require(verifyParticipant(msg.sender) == true);
-        require(surveyTokenBalance() >= rewardAmount);
     }
 
     function storeResponse(string memory cid) public onlyAdmin {
@@ -119,8 +146,7 @@ contract survey {
         emit responseStored(cid);
     }
 
-    function disburseReward(address payable user) public onlyAdmin {
-        require(surveyStatus == true);
+    function disburseReward(address payable user) public onlyAdmin isOpen hasFunds {
         surveyToken.transfer(user, rewardAmount);
         participants.push(user);
         uint b = surveyTokenBalance();

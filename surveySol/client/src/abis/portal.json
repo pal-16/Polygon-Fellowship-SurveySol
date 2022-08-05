@@ -70,6 +70,21 @@
                     "internalType": "string[]",
                     "name": "_userCriteria",
                     "type": "string[]"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "nftGating",
+                    "type": "bool"
+                },
+                {
+                    "internalType": "address",
+                    "name": "nft",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "nftAmount",
+                    "type": "uint256"
                 }
             ],
             "name": "createSurvey",

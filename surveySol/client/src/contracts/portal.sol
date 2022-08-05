@@ -45,9 +45,10 @@ contract portal {
         portalFees = _portalFees;
     }
 
-    function createSurvey(address _surveyToken, uint256 _rewardAmount, string [] memory _userCriteria) public payable returns (address) {
+    function createSurvey(address _surveyToken, uint256 _rewardAmount, string [] memory _userCriteria, bool nftGating, 
+        address nft, uint256 nftAmount) public payable returns (address) {
         require(msg.value == portalFees);
-        address newSurvey = address(new survey(_surveyToken, _rewardAmount, _userCriteria, payable(address(this)), payable(msg.sender), owner));
+        address newSurvey = address(new survey(_surveyToken, _rewardAmount, _userCriteria, payable(address(this)), payable(msg.sender), owner, nftGating, nft, nftAmount));
         surveyRecord.push(payable(newSurvey));
         emit surveyCreated(payable(newSurvey));
         return newSurvey;
