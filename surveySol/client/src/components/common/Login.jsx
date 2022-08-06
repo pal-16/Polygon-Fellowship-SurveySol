@@ -12,7 +12,6 @@ import {
 import Spinner from "../../components/Spinner";
 import { useAuthState, useAuthDispatch } from "../../context/AuthContext";
 import { useHistory } from "react-router-dom";
-//import { checkLogin } from "../../actions/apiActions";
 import { SnackbarContext } from "../../context/SnackbarContext";
 import Web3Modal from "web3modal";
 

@@ -24,6 +24,7 @@ import { SnackbarContext } from "../../context/SnackbarContext";
 import { useAuthDispatch } from "../../context/AuthContext";
 import { REQUEST_AUTH } from "../../reducers/types";
 import { createSurvey } from "../../actions/apiActions";
+import NewSurveyCrtieria from "./NewSurveyCriteria";
 
 import PortalContract from "../../abis/portal.json";
 import SurveyContract from "../../abis/survey.json";
@@ -76,13 +77,18 @@ const NewSurvey = () => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [formData, setFormData] = useState(null);
   const [survey, setsurvey] = useState({
-    userID: "pf21139229293",
+    userID: "",
     title: "",
     description: "",
     reward: "",
-    occupation: "",
+    rewardtokenaddres: "",
+    nfttokenaddress: "",
+    amountnft: "",
+    skills: "",
     gender: "",
-    tokenAddress: "",
+    empstatus: "",
+    maritalstatus: "",
+    nationality: "",
     field: [{ question: "what is your name", options: ["palak", "jayati"] }]
   });
 
@@ -91,9 +97,14 @@ const NewSurvey = () => {
     title: "",
     description: "",
     reward: "",
-    occupation: "",
-    tokenAddress: "",
-    gender: ""
+    rewardtokenaddres: "",
+    nfttokenaddress: "",
+    amountnft: "",
+    skills: "",
+    gender: "",
+    empstatus: "",
+    maritalstatus: "",
+    nationality: "",
   });
 
   const [isRegistered, setIsRegistered] = useState(true);
@@ -111,9 +122,14 @@ const NewSurvey = () => {
       title: "",
       description: "",
       reward: "",
-      occupation: "",
-      tokenAddress: "",
-      gender: ""
+      rewardtokenaddres: "",
+      nfttokenaddress: "",
+      amountnft: "",
+      skills: "",
+      gender: "",
+      empstatus: "",
+      maritalstatus: "",
+      nationality: "",
     });
 
     return formIsValid;
@@ -144,7 +160,7 @@ const NewSurvey = () => {
           ["male"],
           { value: 10 }
         );
-        console.log("Hello Palak");
+
         console.log(t);
         history.push(`/student/applications`);
         setSeverity("success");
@@ -201,24 +217,38 @@ const NewSurvey = () => {
                   onChange={handlesurvey}
                   error={errors.tokenAddress}
                 />
+                <FormField
+                  label="NFT Token address"
+                  name="nfttokenaddress"
+
+                  onChange={handlesurvey}
+                  error={errors.description}
+                />
+                <FormField
+                  label="Amount of NFT tokens"
+                  name="rewardtokenaddress"
+
+                  onChange={handlesurvey}
+                  error={errors.description}
+                />
+
                 <Grid container spacing={1}>
                   <Grid item xs={12} md={6}>
                     <FormControl
                       variant="outlined"
-                      required
                       className={classes.formControl}
-                      error={errors.occupation.length !== 0}
+                      error={errors.skills.length !== 0}
                     >
-                      <InputLabel id="occupation-label">Occupation</InputLabel>
+                      <InputLabel id="skills-label">Skills</InputLabel>
                       <Select
-                        labelId="occupation-label"
-                        id="occupation"
-                        name="occupation"
-                        value={survey.occupation}
+                        labelId="skills-label"
+                        id="skills"
+                        name="skills"
+                        value={survey.skills}
                         onChange={handlesurvey}
-                        label="Occupation"
+                        label="Skills"
                       >
-                        {constants.OCCUPATION.map((degree) => (
+                        {constants.SKILLS.map((degree) => (
                           <MenuItem key={degree} value={degree}>
                             {degree}
                           </MenuItem>
@@ -230,7 +260,6 @@ const NewSurvey = () => {
                   <Grid item xs={12} md={6}>
                     <FormControl
                       variant="outlined"
-                      required
                       className={classes.formControl}
                       error={errors.gender.length !== 0}
                     >
@@ -244,6 +273,57 @@ const NewSurvey = () => {
                         label="Gender"
                       >
                         {constants.GENDER.map((user) => (
+                          <MenuItem key={user} value={user}>
+                            {user}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      <FormHelperText>{errors.gender}</FormHelperText>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={1}>
+                  <Grid item xs={12} md={6}>
+                    <FormControl
+                      variant="outlined"
+                      className={classes.formControl}
+                      error={errors.empstatus.length !== 0}
+                    >
+                      <InputLabel id="empstatus-label">Employment Status</InputLabel>
+                      <Select
+                        labelId="empstatus-label"
+                        id="empstatus"
+                        name="empstatus"
+                        value={survey.empstatus}
+                        onChange={handlesurvey}
+                        label="Employnment Status"
+                      >
+                        {constants.EMPSTATUS.map((degree) => (
+                          <MenuItem key={degree} value={degree}>
+                            {degree}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      <FormHelperText>{errors.degree}</FormHelperText>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <FormControl
+                      variant="outlined"
+                      className={classes.formControl}
+                      error={errors.maritalstatus.length !== 0}
+                    >
+                      <InputLabel id="maritalstatus-label">Marital Status</InputLabel>
+                      <Select
+                        labelId="maritalstatus-label"
+                        id="maritalstatus"
+                        name="maritalstatus"
+                        value={survey.maritalstatus}
+                        onChange={handlesurvey}
+                        label="Marital Status"
+                      >
+                        {constants.MARITALSTATUS.map((user) => (
                           <MenuItem key={user} value={user}>
                             {user}
                           </MenuItem>

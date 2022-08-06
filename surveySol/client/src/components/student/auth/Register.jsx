@@ -89,18 +89,17 @@ const Register = () => {
   const [formData, setFormData] = useState(null);
   const [student, setStudent] = useState({
     walletID: "",
-    name: "",
-    email: "",
     occupation: "",
     gender: "",
+    empStatus: "",
+
   });
 
   const [errors, updateErrors] = useState({
     walletID: "",
-    name: "",
-    email: "",
     occupation: "",
     gender: "",
+    empStatus: "",
   });
 
 
@@ -116,10 +115,9 @@ const Register = () => {
     let formIsValid = true;
     updateErrors({
       walletID: "",
-      name: "",
-      email: "",
       occupation: "",
       gender: "",
+      empStatus: "",
     });
 
     // if (student.studentID.length !== 9) {
@@ -244,26 +242,12 @@ const Register = () => {
         >
           <Paper elevation={isSmallScreen ? 0 : 3} className={classes.paper}>
             <div style={{ marginTop: "24px" }}>
-              <Typography variant="h5">User Registration</Typography>
+              <Typography variant="h5">User Onboarding</Typography>
             </div>
 
             <form className={classes.form} noValidate>
               <div className={classes.formInner}>
 
-                <FormField
-                  label="Name"
-                  name="name"
-                  required={true}
-                  onChange={handleStudent}
-                  error={errors.name}
-                />
-                <FormField
-                  label="Email"
-                  name="email"
-                  required={true}
-                  onChange={handleStudent}
-                  error={errors.email}
-                />
 
                 <Grid container spacing={1}>
                   <Grid item xs={12} md={6}>
@@ -273,7 +257,7 @@ const Register = () => {
                       className={classes.formControl}
                       error={errors.occupation.length !== 0}
                     >
-                      <InputLabel id="occupation-label">Occupation</InputLabel>
+                      <InputLabel id="occupation-label">Skills</InputLabel>
                       <Select
                         labelId="occupation-label"
                         id="occupation"

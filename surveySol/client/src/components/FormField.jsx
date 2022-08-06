@@ -20,7 +20,6 @@ const FormField = (props) => {
         name={props.name}
         required={props.required}
         onChange={props.onChange}
-        error={props.error.length !== 0}
         helperText={props.error}
         fullWidth
         InputProps={props.InputProps}

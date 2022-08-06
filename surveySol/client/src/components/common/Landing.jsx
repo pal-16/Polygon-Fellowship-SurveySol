@@ -1,51 +1,32 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Box, Grid, Paper, Typography, Divider } from "@material-ui/core";
-import constants from "../../constants";
+import { Link } from 'react-router-dom'
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    minHeight: "80vh",
-    paddingTop: theme.spacing(3)
-  },
-  item: {
-    marginBottom: theme.spacing(1),
-    textAlign: "center"
-  },
-  paper: {
-    display: "flex",
-    flexDirection: "column",
-    padding: theme.spacing(3)
-  },
-  point: {
-    marginBottom: theme.spacing(1.2),
-    fontSize: "1.1rem",
-    fontStyle: "italic"
-  }
-}));
+import banner from "./assets/banner.svg"
+import features from "./assets/features.svg"
 
-const Landing = () => {
-  const classes = useStyles();
+function Landing() {
+  return <div>
+    <div className="section">
+      <img src={banner} alt="banner" />
+      <div className="content">
+        <h1>Create, Share <span>forms</span> easily</h1>
+        <p>Formale lets you create forms super simply. All you need to do is create a free account and you'll be all set. You can share the link of your form with others and see thier submissions. It's suitable for online MCQ exam and for job recruitments</p>
+        <Link to="/create" className="btn">get started</Link>
+      </div>
+    </div>
+    <div className="section">
+      <div className="content">
+        <h1>Why choose us</h1>
+        <p>
+          <span className="li">Easy to use</span>
+          <span className="li">100% free</span>
+          <span className="li">Share with friends</span>
+          <span className="li">No login required for submitting form</span>
+          <span className="li">Supports media file</span>
+        </p>
+      </div>
+      <img src={features} alt="features" />
+    </div>
+  </div>
+}
 
-  return (
-    <Box
-      className={classes.root}
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-    >
-      <Grid container spacing={3}>
-        <Grid item xs={12} className={classes.item}>
-          <Typography variant="h4">Survey as a Service!</Typography>
-          <Divider style={{ marginBottom: "16px" }} />
-          <Typography>
-
-          </Typography>
-        </Grid>
-
-      </Grid>
-    </Box>
-  );
-};
-
-export default Landing;
+export default Landing

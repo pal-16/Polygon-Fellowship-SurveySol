@@ -3,7 +3,9 @@ const mongoose = require("mongoose");
 const survey = new mongoose.Schema({
   userID: {
     type: String,
-  //  unique: true
+  },
+  deployedAddress:{
+    type:String
   },
   title: {
     type: String,
@@ -17,13 +19,29 @@ const survey = new mongoose.Schema({
     type: Number,
     required: true
   },
-  occupation: {
-    type: String,
-    required: true
+  rewardtokenaddress:{
+    type:String
+  }, 
+nfttokenaddress:{
+  type:String
+}, 
+amountnft:{
+  type:Number
+},
+  skills: {
+    type: String, 
   },
   gender: {
     type: String,
-    required: true
+  },
+  empstatus:{
+    type:String,
+  },
+  martialstatus:{
+    type:String,
+  },
+  nationality:{
+    type:String,
   },
   field: {
    type: [
@@ -34,9 +52,6 @@ const survey = new mongoose.Schema({
     ],
     default: []
   },
-  status:{
-    type:String
-  }
  
 });
 

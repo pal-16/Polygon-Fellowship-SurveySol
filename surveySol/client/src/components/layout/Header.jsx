@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
+import Web3Modal from "web3modal";
+import { ethers } from "ethers";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import SchoolRoundedIcon from "@material-ui/icons/SchoolRounded";
@@ -48,7 +50,7 @@ const Header = () => {
 
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
+  const [signer, setSigner] = useState("");
   const navigationHandler = (route) => {
     handleMobileMenuClose();
     history.push(route);
@@ -88,7 +90,7 @@ const Header = () => {
           <MenuItem
             onClick={() => navigationHandler(`/${userType}/applications`)}
           >
-            <p>Applications</p>
+            <p>Surveys</p>
           </MenuItem>
 
           <MenuItem onClick={handleLogout}>
@@ -146,7 +148,7 @@ const Header = () => {
                   disableFocusRipple
                 >
                   <Typography variant="body1" noWrap>
-                    Applications
+                    Surveys
                   </Typography>
                 </Button>
                 <Button
@@ -164,14 +166,30 @@ const Header = () => {
             ) : (
               <div>
                 <Button
-                  onClick={() => navigationHandler("/student/login")}
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    console.log("Done")
+                    const web3Modal = new Web3Modal();
+                    const connection = await web3Modal.connect();
+                    const provider = new ethers.providers.Web3Provider(connection);
+                    const s = provider.getSigner();
+                    const checkadd = await s.getAddress();
+                    console.log(checkadd);
+                    //    if (!checkLogin(checkadd)) {
+                    const sign = await s.signMessage("Welcome to SurveySol");
+                    //  }
+
+                    setSigner(s);
+
+                    history.push(`/student/register`);
+                  }}
                   color="inherit"
                   className={`${classes.navButton} ${classes.button}`}
                   disableRipple
                   disableFocusRipple
                 >
                   <Typography variant="body1" noWrap>
-                    User
+                    Connect wallet
                   </Typography>
                 </Button>
 
@@ -192,7 +210,7 @@ const Header = () => {
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
-    </div>
+    </div >
   );
 };
 

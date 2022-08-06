@@ -5,24 +5,20 @@ const user = new mongoose.Schema({
   walletID: {
     type: String
   },
-  name: {
-    type: String,
-    required: true
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
-    validate: validator.isEmail
-  },
-  occupation: {
-    type: String,
-    required: true
+  skills: {
+    type: String, 
   },
   gender: {
     type: String,
-    required: true
+  },
+  empstatus:{
+    type:String,
+  },
+  martialstatus:{
+    type:String,
+  },
+  nationality:{
+    type:String,
   },
   surveysCreated: {
     type: [
