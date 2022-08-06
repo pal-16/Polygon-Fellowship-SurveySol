@@ -77,7 +77,7 @@ const NewSurvey = () => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [formData, setFormData] = useState(null);
   const [survey, setsurvey] = useState({
-    userID: "",
+    userID: "12",
     title: "",
     description: "",
     reward: "",
@@ -150,21 +150,26 @@ const NewSurvey = () => {
         const connection = await web3Modal.connect();
         const provider = new ethers.providers.Web3Provider(connection);
         const s = provider.getSigner();
-        const add = "0x475C5c294Cfe228FADFC1e1FD80c12fB98818CE6";
+        const add = "0xEa555f2ab67126e56e5fB1C088C0A89E662B21Fb";
         const contract = new ethers.Contract(add, PortalContract.abi, s);
         console.log(contract);
         // const t = await contract.portalFees();
+        // console.log(survey.reward);
+        // console.log(survey.)
         const t = await contract.createSurvey(
           "0xcc42724c6683b7e57334c4e856f4c9965ed682bd",
           12,
           ["male"],
+          false,
+          "0xcc42724c6683b7e57334c4e856f4c9965ed682bd",
+          9,
           { value: 10 }
         );
 
         console.log(t);
         history.push(`/student/applications`);
         setSeverity("success");
-        setMessage("Created survey");
+        setMessage("Your contract is deployed at address ");
       } else {
         setSeverity("error");
         setMessage(res.error);
