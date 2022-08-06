@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
 //import QuestionHeader from './QuestionHeader';
+import { Link, useHistory } from "react-router-dom";
 import { Grid } from "@material-ui/core";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-
+import { useAuthDispatch } from "../../../context/AuthContext";
 import { Paper, Typography } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import Accordion from "@material-ui/core/Accordion";
@@ -13,7 +14,7 @@ import IconButton from "@material-ui/core/IconButton";
 import CropOriginalIcon from "@material-ui/icons/CropOriginal";
 import CloseIcon from "@material-ui/icons/Close";
 import Radio from "@material-ui/core/Radio";
-
+import { SnackbarContext } from "../../../context/SnackbarContext";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import AccordionActions from "@material-ui/core/AccordionActions";
 import Divider from "@material-ui/core/Divider";
@@ -24,11 +25,15 @@ import FilterNoneIcon from "@material-ui/icons/FilterNone";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import ImageUplaodModel from "./ImageUplaodModel";
-
+import PortalContract from "../../../abis/portal.json";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import SaveIcon from "@material-ui/icons/Save";
+import { ethers } from "ethers";
+import Web3Modal from "web3modal";
+import { REQUEST_AUTH } from "../../../reducers/types";
+import { createSurvey } from "../../../actions/apiActions";
 
-function QuestionsTab() {
+function QuestionsTab(props) {
   const [questions, setQuestions] = React.useState([]);
   const [openUploadImagePop, setOpenUploadImagePop] = React.useState(false);
   const [imageContextData, setImageContextData] = React.useState({
@@ -37,6 +42,49 @@ function QuestionsTab() {
   });
   const [formData, setFormData] = React.useState({});
   const [loadingFormData, setLoadingFormData] = React.useState(true);
+  const dispatch = useAuthDispatch();
+  const { setOpen, setSeverity, setMessage } = useContext(SnackbarContext);
+  const history = useHistory();
+  const handleFormSubmit = async (event) => {
+    console.log(questions);
+    dispatch({ type: REQUEST_AUTH });
+    event.preventDefault();
+
+      const res = await createSurvey({ dispatch, body: props.survey });
+      if (res.status === 201) {
+       
+        console.log("done");
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+        const s = provider.getSigner();
+        const add = "0xEa555f2ab67126e56e5fB1C088C0A89E662B21Fb";
+        const contract = new ethers.Contract(add, PortalContract.abi, s);
+        console.log(contract);
+        // const t = await contract.portalFees();
+        // console.log(survey.reward);
+        // console.log(survey.)
+        const t = await contract.createSurvey(
+          "0xcc42724c6683b7e57334c4e856f4c9965ed682bd",
+          12,
+          ["male"],
+          false,
+          "0xcc42724c6683b7e57334c4e856f4c9965ed682bd",
+          9,
+          { value: 10 }
+        );
+
+        console.log(t);
+        history.push(`/student/applications`);
+        setSeverity("success");
+        setMessage("Your contract is deployed at address ");
+      } else {
+        setSeverity("error");
+        setMessage(res.error);
+        setOpen(true);
+      }
+    }
+
 
   React.useEffect(() => {
     setQuestions([
@@ -51,13 +99,13 @@ function QuestionsTab() {
   }, []);
 
   function addMoreQuestionField() {
-    expandCloseAll(); //I AM GOD
+    expandCloseAll();
 
     setQuestions((questions) => [
       ...questions,
       {
-        questionText: "Question",
-        options: [{ optionText: "Option 1" }],
+        questionText: "Add your Question",
+        options: [{ optionText: "Option 1" }, { optionText: "Option 2" }],
         open: true
       }
     ]);
@@ -243,20 +291,7 @@ function QuestionsTab() {
                           {i + 1}. {ques.questionText}
                         </Typography>
 
-                        {ques.questionImage !== "" ? (
-                          <div>
-                            <img
-                              src={ques.questionImage}
-                              width="400px"
-                              height="auto"
-                            />
-                            <br></br>
-                            <br></br>
-                          </div>
-                        ) : (
-                          ""
-                        )}
-
+                     
                         {ques.options.map((op, j) => (
                           <div key={j}>
                             <div style={{ display: "flex" }}>
@@ -460,7 +495,7 @@ function QuestionsTab() {
       </Draggable>
     ));
   }
-
+  
   return (
     <div
       style={{ marginTop: "15px", marginBottom: "7px", paddingBottom: "30px" }}
@@ -469,38 +504,7 @@ function QuestionsTab() {
         {loadingFormData ? <CircularProgress /> : ""}
 
         <Grid item xs={12} sm={5} style={{ width: "100%" }}>
-          <Grid style={{ borderTop: "10px solid teal", borderRadius: 10 }}>
-            <div>
-              <div>
-                <Paper elevation={2} style={{ width: "100%" }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-start",
-                      marginLeft: "15px",
-                      paddingTop: "20px",
-                      paddingBottom: "20px"
-                    }}
-                  >
-                    <Typography
-                      variant="h4"
-                      style={{
-                        fontFamily: "sans-serif Roboto",
-                        marginBottom: "15px"
-                      }}
-                    >
-                      {formData.name}
-                    </Typography>
-                    <Typography variant="subtitle1">
-                      {formData.description}
-                    </Typography>
-                  </div>
-                </Paper>
-              </div>
-            </div>
-          </Grid>
-
+        
           <Grid style={{ paddingTop: "10px" }}>
             <div>
               <DragDropContext onDragEnd={onDragEnd}>
@@ -529,8 +533,9 @@ function QuestionsTab() {
                   color="primary"
                   style={{ margin: "15px" }}
                   endIcon={<SaveIcon />}
+                  onClick={handleFormSubmit}
                 >
-                  Save Questions{" "}
+                 Save Survey{" "}
                 </Button>
               </div>
             </div>
