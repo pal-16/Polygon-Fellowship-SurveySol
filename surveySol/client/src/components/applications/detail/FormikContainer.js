@@ -50,21 +50,24 @@ function FormikContainer() {
       console.log("Form data", values);
       console.log("Saved data", JSON.parse(JSON.stringify(values)));
       const admin = await config();
+      console.log(admin);
       const useraddress = "0x5070c3CC7D9605422B1daa37216FCBa9fE527fF2";
       let adminSurveyContract = new ethers.Contract(
-        "0x55c21Caa0f77f39C1Efe9e396a7cA18A0CD1bCF3",
+        "0xEa555f2ab67126e56e5fB1C088C0A89E662B21Fb",
         SurveyContract.abi,
         admin
       );
-      // console.log("jojo");
+      console.log("jojo");
       // console.log(adminSurveyContract);
-      await adminSurveyContract.verifyParticipant(useraddress);
+      let k = await adminSurveyContract.verifyParticipant(useraddress);
+      console.log(k);
       let cid = await uploadResponse(values);
+      console.log(cid);
       let f = await adminSurveyContract.storeResponse(cid);
-      // console.log(admin);
+      console.log(admin);
       // const k = await adminSurveyContract.surveyResponses(1);
 
-      await adminSurveyContract.disburseReward(useraddress);
+      // await adminSurveyContract.disburseReward(useraddress);
     } catch (err) {
       console.log(err);
     }

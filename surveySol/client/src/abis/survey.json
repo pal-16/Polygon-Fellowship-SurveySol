@@ -31,6 +31,21 @@
                     "internalType": "address payable",
                     "name": "_admin",
                     "type": "address"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "_nftGating",
+                    "type": "bool"
+                },
+                {
+                    "internalType": "address",
+                    "name": "nft",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_nftAmount",
+                    "type": "uint256"
                 }
             ],
             "stateMutability": "payable",
@@ -220,6 +235,19 @@
         },
         {
             "inputs": [],
+            "name": "nftToken",
+            "outputs": [
+                {
+                    "internalType": "contract IERC721",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
             "name": "openSurvey",
             "outputs": [],
             "stateMutability": "nonpayable",
@@ -236,6 +264,29 @@
                 }
             ],
             "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "bool",
+                    "name": "_nftGating",
+                    "type": "bool"
+                },
+                {
+                    "internalType": "address",
+                    "name": "_nftToken",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256"
+                }
+            ],
+            "name": "setNftGating",
+            "outputs": [],
+            "stateMutability": "nonpayable",
             "type": "function"
         },
         {
