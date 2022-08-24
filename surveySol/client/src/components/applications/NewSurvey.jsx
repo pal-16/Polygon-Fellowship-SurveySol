@@ -81,7 +81,7 @@ const NewSurvey = () => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [formData, setFormData] = useState(null);
   const [survey, setsurvey] = useState({
-    userID: "12ss3",
+    userID: "1233333",
     title: "",
     description: "",
     reward: "",
@@ -126,6 +126,7 @@ const NewSurvey = () => {
       title: "",
       description: "",
       reward: "",
+      deployedAddress: "",
       rewardtokenaddres: "",
       nfttokenaddress: "",
       amountnft: "",

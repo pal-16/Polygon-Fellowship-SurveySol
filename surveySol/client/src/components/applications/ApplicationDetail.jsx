@@ -15,7 +15,7 @@ import Spinner from "../Spinner";
 import ApplicationItem from "./ApplicationItem";
 import StatusChip from "./StatusChip";
 import FormikContainer from "./detail/FormikContainer";
-
+import UserView from "../form/Responding/UserView";
 const useStyles = makeStyles((theme) => ({
   root: {
     minHeight: "80vh",
@@ -86,7 +86,8 @@ const ApplicationDetail = (props) => {
   return loading ? (
     <Spinner />
   ) : (
-    <FormikContainer />
+    <UserView />
+    // <FormikContainer />
     // <Box
     //   className={classes.root}
     //   display="flex"

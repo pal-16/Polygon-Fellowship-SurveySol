@@ -201,8 +201,10 @@ const ApplicationsList = () => {
                   </TableCell>
                 )}
                 <TableCell style={{ fontSize: "1.1rem", textAlign: "center" }}>
-                  <StatusChip status={application.occupation} />
-                  <StatusChip status={application.gender} />
+                  {application.skills !== "" && <StatusChip status={application.skills} />}
+                  {application.gender !== "" && <StatusChip status={application.gender} />}
+                  {application.empstatus !== "" && <StatusChip status={application.empstatus} />}
+
                 </TableCell>
               </TableRow>
             ))}

@@ -25,9 +25,9 @@ import { useAuthDispatch } from "../../../context/AuthContext";
 import FormField from "../../../components/FormField";
 import constants from "../../../constants";
 import { REQUEST_AUTH } from "../../../reducers/types";
-
+import config from "../../../config";
 import { ethers } from "ethers";
-
+import Spinner from "../../Spinner";
 
 
 import PortalContract from '../../../abis/portal.json'
@@ -81,7 +81,7 @@ const Register = () => {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-    setLoading(true);
+    // setLoading(true);
 
 
   }, []);
@@ -89,17 +89,24 @@ const Register = () => {
   const [formData, setFormData] = useState(null);
   const [student, setStudent] = useState({
     walletID: "",
-    occupation: "",
+    skills: "",
     gender: "",
-    empStatus: "",
+    empstatus: "",
+    maritalstatus: "",
+    nationality: "",
 
   });
 
   const [errors, updateErrors] = useState({
     walletID: "",
-    occupation: "",
+    skills: "",
     gender: "",
     empStatus: "",
+    skills: "",
+    gender: "",
+    empstatus: "",
+    maritalstatus: "",
+    nationality: "",
   });
 
 
@@ -115,9 +122,14 @@ const Register = () => {
     let formIsValid = true;
     updateErrors({
       walletID: "",
-      occupation: "",
+      skills: "",
       gender: "",
       empStatus: "",
+      skills: "",
+      gender: "",
+      empstatus: "",
+      maritalstatus: "",
+      nationality: "",
     });
 
     // if (student.studentID.length !== 9) {
@@ -161,47 +173,59 @@ const Register = () => {
   };
 
   const handleFormSubmit = async (event) => {
+    setLoading(true);
     dispatch({ type: REQUEST_AUTH });
     event.preventDefault();
-    if (isFormValid()) {
 
-      console.log("===========================Palak")
-      console.log(student);
+    console.log("===========================Palak")
+    console.log(student);
 
-      const res = await register({ dispatch, body: student })
-      if (res.status === 201) {
-        setFormData({ student, hash: res.data.hash });
+    const res = await register({ dispatch, body: student })
+    if (res.status === 201) {
+      setFormData({ student, hash: res.data.hash });
 
-        try {
-          console.log("Done")
-          const web3Modal = new Web3Modal();
-          const connection = await web3Modal.connect();
-          const provider = new ethers.providers.Web3Provider(connection);
-          const s = provider.getSigner();
-          const add = '0x404Ee28eF5fc24A10200A6596E72Fd680DE5B1A6';
-          const contract = new ethers.Contract(add, PortalContract.abi, s);
-          console.log(contract);
-          const t = await contract.addUser(["male", "female"], [true, false], "0x780aF34e5A55B592f0494cC574999D20D9632817")
-          //     history.push(`/${props.userType}/register`);
-          console.log("done");
-          history.push(`/student/applications`);
-          setSeverity("success");
-          setMessage("You have successfully registered.");
+      try {
+        console.log("Done")
+
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+        const s = provider.getSigner();
+        // const add = '0x404Ee28eF5fc24A10200A6596E72Fd680DE5B1A6';
+        const admin = await config();
+
+        let contract = new ethers.Contract(
+          "0x404Ee28eF5fc24A10200A6596E72Fd680DE5B1A6",
+          PortalContract.abi,
+          admin
+        );
+        //  const contract = new ethers.Contract(add, PortalContract.abi, s);
+        console.log(contract);
 
 
-        } catch (e) {
-          console.log(e);
-        }
+        const t = await contract.addUser(["male", "Web Developer"], [true, false], "0x9dC36499A0aB380eeaC69De651811B68beb0a783")
+        //     history.push(`/${props.userType}/register`);
+        console.log("done");
+        setOpen(true)
+        setLoading(false);
+        history.push(`/student/applications`);
+        setSeverity("success");
+        setMessage("You have successfully registered.");
 
-      } else {
-        setSeverity("error");
-        setMessage(res.error);
-        setOpen(true);
+
+      } catch (e) {
+        console.log(e);
       }
 
+    } else {
+      setSeverity("error");
+      setMessage(res.error);
+      setOpen(true);
     }
+
+
   };
-  return (
+  return loading == true ? <Spinner></Spinner> : (
     <>
       {/* <Dialog open={isRegistered}>
         <DialogTitle>Key Pair</DialogTitle>
@@ -244,29 +268,25 @@ const Register = () => {
             <div style={{ marginTop: "24px" }}>
               <Typography variant="h5">User Onboarding</Typography>
             </div>
-
             <form className={classes.form} noValidate>
               <div className={classes.formInner}>
-
-
                 <Grid container spacing={1}>
                   <Grid item xs={12} md={6}>
                     <FormControl
                       variant="outlined"
-                      required
                       className={classes.formControl}
-                      error={errors.occupation.length !== 0}
+                      error={errors.skills.length !== 0}
                     >
-                      <InputLabel id="occupation-label">Skills</InputLabel>
+                      <InputLabel id="skills-label">Skills</InputLabel>
                       <Select
-                        labelId="occupation-label"
-                        id="occupation"
-                        name="occupation"
-                        value={student.occupation}
+                        labelId="skills-label"
+                        id="skills"
+                        name="skills"
+                        value={student.skills}
                         onChange={handleStudent}
-                        label="Occupation"
+                        label="Skills"
                       >
-                        {constants.OCCUPATION.map((degree) => (
+                        {constants.SKILLS.map((degree) => (
                           <MenuItem key={degree} value={degree}>
                             {degree}
                           </MenuItem>
@@ -278,13 +298,10 @@ const Register = () => {
                   <Grid item xs={12} md={6}>
                     <FormControl
                       variant="outlined"
-                      required
                       className={classes.formControl}
                       error={errors.gender.length !== 0}
                     >
-                      <InputLabel id="gender-label">
-                        Gender
-                      </InputLabel>
+                      <InputLabel id="gender-label">Gender</InputLabel>
                       <Select
                         labelId="gender-label"
                         id="gender"
@@ -302,64 +319,60 @@ const Register = () => {
                       <FormHelperText>{errors.gender}</FormHelperText>
                     </FormControl>
                   </Grid>
-
                 </Grid>
 
-                {/* <FormControlLabel
-                style={{ marginBottom: "10px", color: "#757575" }}
-                control={
-                  <Checkbox
-                    value="hasPubKey"
-                    color="primary"
-                    checked={hasPubKey}
-                    onChange={handleHasPubKey}
-                  />
-                }
-                label="Do you have a public key? (If you don't, enter a pin and passphrase below to generate a new public key-pair for yourself)"
-              />
-              {!hasPubKey && (
-                <React.Fragment>
-                  <FormField
-                    label="Pin (4-digit number)"
-                    name="pin"
-                    required={true}
-                    onChange={handleStudent}
-                    error={errors.pin}
-                    InputProps={{
-                      type: showPin ? "text" : "password",
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle pin visibility"
-                            onClick={toggleShowPin}
-                            edge="end"
-                          >
-                            {showPin ? <Visibility /> : <VisibilityOff />}
-                          </IconButton>
-                        </InputAdornment>
-                      )
-                    }}
-                  />
-                  <FormField
-                    label="Encryption Passphrase (12 - 24 characters)"
-                    name="passphrase"
-                    required={true}
-                    onChange={handleStudent}
-                    error={errors.passphrase}
-                  />
-                </React.Fragment>
-              )}
-              {hasPubKey && (
-                <FormField
-                  label="Public Key"
-                  name="customPublicKey"
-                  required={true}
-                  onChange={handleStudent}
-                  error={errors.customPublicKey}
-                  multiline={true}
-                  maxRows={Infinity}
-                />
-              )} */}
+                <Grid container spacing={1}>
+                  <Grid item xs={12} md={6}>
+                    <FormControl
+                      variant="outlined"
+                      className={classes.formControl}
+                      error={errors.empstatus.length !== 0}
+                    >
+                      <InputLabel id="empstatus-label">Employment Status</InputLabel>
+                      <Select
+                        labelId="empstatus-label"
+                        id="empstatus"
+                        name="empstatus"
+                        value={student.empstatus}
+                        onChange={handleStudent}
+                        label="Employnment Status"
+                      >
+                        {constants.EMPSTATUS.map((degree) => (
+                          <MenuItem key={degree} value={degree}>
+                            {degree}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      <FormHelperText>{errors.degree}</FormHelperText>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <FormControl
+                      variant="outlined"
+                      className={classes.formControl}
+                      error={errors.maritalstatus.length !== 0}
+                    >
+                      <InputLabel id="maritalstatus-label">Marital Status</InputLabel>
+                      <Select
+                        labelId="maritalstatus-label"
+                        id="maritalstatus"
+                        name="maritalstatus"
+                        value={student.maritalstatus}
+                        onChange={handleStudent}
+                        label="Marital Status"
+                      >
+                        {constants.MARITALSTATUS.map((user) => (
+                          <MenuItem key={user} value={user}>
+                            {user}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      <FormHelperText>{errors.gender}</FormHelperText>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+
+
                 <Button
                   onClick={handleFormSubmit}
                   size="large"
@@ -372,15 +385,7 @@ const Register = () => {
                 </Button>
               </div>
             </form>
-            <Typography
-              style={{ color: "#303F9E", fontSize: 15, marginBottom: "15px" }}
-            >
-              Already have an account?
-              <Link style={{ color: "#303F9E" }} to={`/student/login`}>
-                {" "}
-                Login
-              </Link>
-            </Typography>
+
           </Paper>
         </Box>
       </React.Fragment>

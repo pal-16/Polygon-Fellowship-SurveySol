@@ -8,8 +8,11 @@ function Landing() {
     <div className="section">
       <img src={banner} alt="banner" />
       <div className="content">
-        <h1>Create, Share <span>forms</span> easily</h1>
-        <p>Formale lets you create forms super simply. All you need to do is create a free account and you'll be all set. You can share the link of your form with others and see thier submissions. It's suitable for online MCQ exam and for job recruitments</p>
+        <h1>  <span>Incentivize</span> form based data collection </h1>
+
+
+        <p>A portal which allows users to create surveys with specific requirements (in terms of user criteria like age, experience, skills, etc.), and users matching the criteria will be able to fill the survey in return for benefits in terms of tokens.
+        </p>
         <Link to="/create" className="btn">get started</Link>
       </div>
     </div>
@@ -17,11 +20,10 @@ function Landing() {
       <div className="content">
         <h1>Why choose us</h1>
         <p>
-          <span className="li">Easy to use</span>
-          <span className="li">100% free</span>
-          <span className="li">Share with friends</span>
-          <span className="li">No login required for submitting form</span>
-          <span className="li">Supports media file</span>
+          <span className="li"> Verified Profiling of Users</span>
+          <span className="li">Get rewards for filling surveys</span>
+          <span className="li">Authentic Data assurance</span>
+          <span className="li">Create Surveys </span>
         </p>
       </div>
       <img src={features} alt="features" />

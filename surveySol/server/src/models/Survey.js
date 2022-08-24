@@ -4,8 +4,8 @@ const survey = new mongoose.Schema({
   userID: {
     type: String,
   },
-  deployedAddress:{
-    type:String
+  deployedAddress: {
+    type: String
   },
   title: {
     type: String,
@@ -19,32 +19,32 @@ const survey = new mongoose.Schema({
     type: Number,
     required: true
   },
-  rewardtokenaddress:{
-    type:String
-  }, 
-nfttokenaddress:{
-  type:String
-}, 
-amountnft:{
-  type:Number
-},
+  rewardtokenaddress: {
+    type: String
+  },
+  nfttokenaddress: {
+    type: String
+  },
+  amountnft: {
+    type: Number
+  },
   skills: {
-    type: String, 
+    type: String,
   },
   gender: {
     type: String,
   },
-  empstatus:{
-    type:String,
+  empstatus: {
+    type: String,
   },
-  martialstatus:{
-    type:String,
+  maritalstatus: {
+    type: String,
   },
-  nationality:{
-    type:String,
+  nationality: {
+    type: String,
   },
   field: {
-   type: [
+    type: [
       {
         type: Array,
         ref: "field"
@@ -52,7 +52,7 @@ amountnft:{
     ],
     default: []
   },
- 
+
 });
 
 const Survey = mongoose.model("survey", survey);

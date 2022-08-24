@@ -118,7 +118,7 @@ const Header = () => {
             className={classes.button}
             onClick={() => navigationHandler("/")}
           >
-            <SchoolRoundedIcon />
+
             <Typography variant="h6" noWrap style={{ marginLeft: "10px" }}>
               SurveySol
             </Typography>

@@ -28,6 +28,7 @@ import ImageUplaodModel from "./ImageUplaodModel";
 import PortalContract from "../../../abis/portal.json";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import SaveIcon from "@material-ui/icons/Save";
+import Spinner from "../../Spinner";
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import { REQUEST_AUTH } from "../../../reducers/types";
@@ -43,47 +44,50 @@ function QuestionsTab(props) {
   const [formData, setFormData] = React.useState({});
   const [loadingFormData, setLoadingFormData] = React.useState(true);
   const dispatch = useAuthDispatch();
+  const [loading, setLoading] = React.useState(false);
   const { setOpen, setSeverity, setMessage } = useContext(SnackbarContext);
   const history = useHistory();
   const handleFormSubmit = async (event) => {
+    setLoading(true);
     console.log(questions);
     dispatch({ type: REQUEST_AUTH });
     event.preventDefault();
+    console.log("done");
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const s = provider.getSigner();
+    const add = "0xEa555f2ab67126e56e5fB1C088C0A89E662B21Fb";
+    const contract = new ethers.Contract(add, PortalContract.abi, s);
+    console.log(contract);
+    // const t = await contract.portalFees();
+    // console.log(survey.reward);
+    // console.log(survey.)
+    const t = await contract.createSurvey(
+      "0xcc42724c6683b7e57334c4e856f4c9965ed682bd",
+      12,
+      ["male"],
+      false,
+      "0xcc42724c6683b7e57334c4e856f4c9965ed682bd",
+      9,
+      { value: 10 }
+    );
+    const res = await createSurvey({ dispatch, body: props.survey });
+    props.survey.deployedAddress = t.data;
+    if (res.status === 201) {
+      console.log(t);
+      setOpen(true);
+      setLoading(false);
+      history.push(`/student/applications`);
 
-      const res = await createSurvey({ dispatch, body: props.survey });
-      if (res.status === 201) {
-       
-        console.log("done");
-        const web3Modal = new Web3Modal();
-        const connection = await web3Modal.connect();
-        const provider = new ethers.providers.Web3Provider(connection);
-        const s = provider.getSigner();
-        const add = "0xEa555f2ab67126e56e5fB1C088C0A89E662B21Fb";
-        const contract = new ethers.Contract(add, PortalContract.abi, s);
-        console.log(contract);
-        // const t = await contract.portalFees();
-        // console.log(survey.reward);
-        // console.log(survey.)
-        const t = await contract.createSurvey(
-          "0xcc42724c6683b7e57334c4e856f4c9965ed682bd",
-          12,
-          ["male"],
-          false,
-          "0xcc42724c6683b7e57334c4e856f4c9965ed682bd",
-          9,
-          { value: 10 }
-        );
-
-        console.log(t);
-        history.push(`/student/applications`);
-        setSeverity("success");
-        setMessage("Your contract is deployed at address ");
-      } else {
-        setSeverity("error");
-        setMessage(res.error);
-        setOpen(true);
-      }
+      setSeverity("success");
+      setMessage("Your survey has been created");
+    } else {
+      setSeverity("error");
+      setMessage(res.error);
+      setOpen(true);
     }
+  }
 
 
   React.useEffect(() => {
@@ -291,7 +295,7 @@ function QuestionsTab(props) {
                           {i + 1}. {ques.questionText}
                         </Typography>
 
-                     
+
                         {ques.options.map((op, j) => (
                           <div key={j}>
                             <div style={{ display: "flex" }}>
@@ -495,8 +499,8 @@ function QuestionsTab(props) {
       </Draggable>
     ));
   }
-  
-  return (
+
+  return loading == true ? <Spinner></Spinner> : (
     <div
       style={{ marginTop: "15px", marginBottom: "7px", paddingBottom: "30px" }}
     >
@@ -504,7 +508,7 @@ function QuestionsTab(props) {
         {loadingFormData ? <CircularProgress /> : ""}
 
         <Grid item xs={12} sm={5} style={{ width: "100%" }}>
-        
+
           <Grid style={{ paddingTop: "10px" }}>
             <div>
               <DragDropContext onDragEnd={onDragEnd}>
@@ -535,7 +539,7 @@ function QuestionsTab(props) {
                   endIcon={<SaveIcon />}
                   onClick={handleFormSubmit}
                 >
-                 Save Survey{" "}
+                  Save Survey{" "}
                 </Button>
               </div>
             </div>
