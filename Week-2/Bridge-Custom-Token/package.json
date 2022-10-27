@@ -1,0 +1,24 @@
+{
+  "name": "polygon-fellowship-week1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pal-16/Polygon-Fellowship.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pal-16/Polygon-Fellowship/issues"
+  },
+  "homepage": "https://github.com/pal-16/Polygon-Fellowship#readme",
+  "dependencies": {
+    "@maticnetwork/maticjs": "^3.4.0-beta.0",
+    "@maticnetwork/maticjs-web3": "^1.0.1",
+    "@truffle/hdwallet-provider": "^2.0.9"
+  }
+}
